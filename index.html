@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Viaje al nuevo local STIHL</title>
+    <meta charset="UTF-8" />
+    <script src="https://maps.googleapis.com/maps/api/js?key=TU_CLAVE_REAL"></script>
+    <style>
+      body, html { margin: 0; padding: 0; height: 100%; }
+      #map { height: 100%; width: 100%; }
+      #startBtn {
+        position: absolute; top: 10px; left: 10px;
+        z-index: 5; padding: 10px 20px;
+        background: #FF6600; color: white;
+        font-weight: bold; border: none; border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="startBtn">Iniciar viaje</button>
+    <div id="map"></div>
+    <script>
+      const start = { lat: -32.9872565, lng: -71.2780451 }; // COMERCIAL TABILO
+      const end = { lat: -33.0072335, lng: -71.2567321 };   // SOC. COMERCIAL EBERLEIN
+      let map, personaje, ruta, pasos, pasoActual = 0;
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: start,
+          zoom: 14
+        });
+
+        // Añade ícono de la meta (tienda STIHL)
+        new google.maps.Marker({
+          position: end,
+          map: map,
+          icon: 'icono-locacion.png'
+        });
+
+        // Inicializa el marcador del personaje
+        personaje = new google.maps.Marker({
+          position: start,
+          map: map,
+          icon: { url: 'personaje.png', scaledSize: new google.maps.Size(80, 80) }
+        });
+
+        // Traza la ruta
+        const directionsService = new google.maps.DirectionsService();
+        const directionsRenderer = new google.maps.DirectionsRenderer({
+          map: map,
+          suppressMarkers: true // desactiva los marcadores predeterminados
+        });
+
+        directionsService.route({
+          origin: start,
+          destination: end,
+          travelMode: 'DRIVING'
+        }, (response, status) => {
+          if (status === 'OK') {
+            directionsRenderer.setDirections(response);
+            const path = response.routes[0].overview_path;
+            pasos = path.map(p => ({lat: p.lat(), lng: p.lng()}));
+          } else {
+            alert('No se pudo calcular la ruta: ' + status);
+          }
+        });
+      }
+
+      function animarPersonaje() {
+        if (!pasos || pasoActual >= pasos.length) {
+          alert('¡Llegaste a la nueva tienda STIHL!');
+          return;
+        }
+        personaje.setPosition(pasos[pasoActual]);
+        map.panTo(pasos[pasoActual]);
+        pasoActual++;
+        setTimeout(animarPersonaje, 150); // velocidad de movimiento
+      }
+
+      window.onload = initMap;
+      document.getElementById("startBtn").onclick = animarPersonaje;
+    </script>
+  </body>
+</html>
