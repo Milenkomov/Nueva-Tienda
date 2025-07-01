@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Viaje al nuevo local STIHL</title>
+    <title>Viaje a la Nueva Tienda STIHL</title>
     <meta charset="UTF-8" />
-    <script src="https://maps.googleapis.com/maps/api/js?key=TU_CLAVE_REAL"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=lagataluna123"></script>
     <style>
       body, html { margin: 0; padding: 0; height: 100%; }
       #map { height: 100%; width: 100%; }
@@ -21,8 +21,8 @@
     <div id="map"></div>
     <script>
       const start = { lat: -32.9872565, lng: -71.2780451 }; // COMERCIAL TABILO
-      const end = { lat: -33.0072335, lng: -71.2567321 };   // SOC. COMERCIAL EBERLEIN
-      let map, personaje, ruta, pasos, pasoActual = 0;
+      const end = { lat: -33.008598, lng: -71.253857 };     // Nueva Tienda (del KMZ)
+      let map, personaje, pasos, pasoActual = 0;
 
       function initMap() {
         map = new google.maps.Map(document.getElementById("map"), {
@@ -30,7 +30,7 @@
           zoom: 14
         });
 
-        // Añade ícono de la meta (tienda STIHL)
+        // Marca la meta con tu icono
         new google.maps.Marker({
           position: end,
           map: map,
@@ -44,11 +44,11 @@
           icon: { url: 'personaje.png', scaledSize: new google.maps.Size(80, 80) }
         });
 
-        // Traza la ruta
+        // Calcula la ruta
         const directionsService = new google.maps.DirectionsService();
         const directionsRenderer = new google.maps.DirectionsRenderer({
           map: map,
-          suppressMarkers: true // desactiva los marcadores predeterminados
+          suppressMarkers: true
         });
 
         directionsService.route({
@@ -74,7 +74,7 @@
         personaje.setPosition(pasos[pasoActual]);
         map.panTo(pasos[pasoActual]);
         pasoActual++;
-        setTimeout(animarPersonaje, 150); // velocidad de movimiento
+        setTimeout(animarPersonaje, 150);
       }
 
       window.onload = initMap;
